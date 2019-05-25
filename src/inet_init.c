@@ -15,7 +15,8 @@ int inetConnect(const char *host, const char *service, int type) {
     hints.ai_addr = NULL;
     hints.ai_next = NULL;
     hints.ai_family = AF_UNSPEC; /* Allows IPv4 or IPv6 */
-    hints.ai_socktype = type;
+    hints.ai_socktype = type;   /* SOCK_STREAM SOCK_DGRAM */
+
     s = getaddrinfo(host, service, &hints, &result);
     if (s != 0) {
         errno = ENOSYS;
@@ -46,7 +47,7 @@ static int inetPassiveSocket(const char *service, int type, socklen_t *addrlen, 
     hints.ai_canonname = NULL;
     hints.ai_addr = NULL;
     hints.ai_next = NULL;
-    hints.ai_socktype = type;
+    hints.ai_socktype = type;  /* SOCK_STREAM SOCK_DGRAM */
     hints.ai_family = AF_UNSPEC; /* Allows IPv4 or IPv6 */
     hints.ai_flags = AI_PASSIVE; /* Use wildcard IP address */
     s = getaddrinfo(NULL, service, &hints, &result);

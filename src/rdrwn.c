@@ -2,21 +2,29 @@
 
 #include <stdio.h>
 
-ssize_t readn(int fd, void *buffer, size_t n) {
+ssize_t
+readn(int fd, void* buffer, size_t n)
+{
 
     ssize_t numRead; /* # of bytes fetched by last read() */
     size_t totRead; /* Total # of bytes read so far */
-    char *buf;
+    char* buf;
     buf = buffer; /* No pointer arithmetic on "void *" */
-    for (totRead = 0; totRead < n;) {
-        numRead = read(fd, buf, n - totRead);
-        if (numRead == 0) /* EOF */
+    for (totRead = 0; totRead<n;) {
+        numRead = read(fd, buf, n-totRead);
+        if (numRead==0) /* EOF */
             return totRead; /* May be 0 if this is first read() */
-        if (numRead == -1) {
-            if (errno == EINTR)
+        if (numRead==-1) {
+            if (errno==EINTR) {
                 continue; /* Interrupted --> restart read() */
-            else
+            }
+            else if (errno==EWOULDBLOCK || errno==EAGAIN) {
+                break;  /* Would block --> exit the loop */
+            }
+            else {
                 return -1; /* Some other error */
+            }
+            break;
         }
         totRead += numRead;
         buf += numRead;
@@ -24,16 +32,21 @@ ssize_t readn(int fd, void *buffer, size_t n) {
     return totRead; /* Must be 'n' bytes if we get here */
 }
 
-ssize_t writen(int fd, const void *buffer, size_t n) {
+ssize_t writen(int fd, const void* buffer, size_t n)
+{
     ssize_t numWritten; /* # of bytes written by last write() */
     size_t totWritten; /* Total # of bytes written so far */
-    const char *buf;
+    const char* buf;
     buf = buffer; /* No pointer arithmetic on "void *" */
-    for (totWritten = 0; totWritten < n;) {
-        numWritten = write(fd, buf, n - totWritten);
-        if (numWritten <= 0) {
-            if (numWritten == -1 && errno == EINTR)
+    for (totWritten = 0; totWritten<n;) {
+        numWritten = write(fd, buf, n-totWritten);
+        if (numWritten<=0) {
+            if (numWritten==-1 && errno==EINTR) {
                 continue; /* Interrupted --> restart write() */
+            }
+            else if (errno==EWOULDBLOCK || errno==EAGAIN) {
+                continue;  /* Would block --> try again */
+            }
             else
                 return -1; /* Some other error */
         }
