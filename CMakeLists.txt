@@ -7,7 +7,7 @@ include_directories(include)
 
 add_library(linet STATIC
         src/rdrwn.c
-        src/inet_init.c
+        src/inet_sockets.c
         )
 
 set_target_properties(linet PROPERTIES PUBLIC_HEADER "include/inet_init.h;include/rdrwn.h")

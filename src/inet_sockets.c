@@ -2,7 +2,7 @@
 // Created by smitropoulos on 5/24/19.
 //
 
-#include "inet_init.h"
+#include "inet_sockets.h"
 
 
 int inetConnect(const char *host, const char *service, int type) {
