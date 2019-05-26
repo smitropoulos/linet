@@ -23,8 +23,10 @@
 should pass to inetAddressStr(). Must be greater
 than (NI_MAXHOST + NI_MAXSERV + 4) */
 
+#ifdef __cplusplus
+extern "C"{
+#endif
 
-/*Create a socket of type (SOCK_STREAM || SOCK_DGRAM) and connect to a host on a service*/
 int inetConnect(const char* host, const char* service, int type);
 
 static int inetPassiveSocket(const char* service, int type, socklen_t* addrlen, int doListen, int backlog);
@@ -39,5 +41,9 @@ int inetBind(const char* service, int type, socklen_t* addrlen);
 
 /* Returns a null terminated string containing the human readable hostname and port into addrStr whose size is AddrStrLen. An always appropriate size is IS_ADDR_STR_LEN*/
 char* inetAddressStr(const struct sockaddr* addr, socklen_t addrlen, char* addrStr, int addrStrLen);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //LINET_INET_SOCKETS_H

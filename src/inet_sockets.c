@@ -3,8 +3,15 @@
 //
 
 #include "inet_sockets.h"
+#include "../include/inet_sockets.h"
 
-
+/*!
+ Create a socket of type (SOCK_STREAM || SOCK_DGRAM) and connect to a host on a service
+ @param host The host to connect to (either format)
+ @param service Service name or PORT number
+ @param type (SOCK_STREAM || SOCK_DGRAM) for their respective usage of TCP or UDP
+ @returns Returns -1 on failure or the file descriptor it is connected to on success.
+ */
 int inetConnect(const char *host, const char *service, int type) {
 
     struct addrinfo hints;
@@ -37,8 +44,10 @@ int inetConnect(const char *host, const char *service, int type) {
     return (rp == NULL) ? -1 : sfd;
 }
 
-/* Public interfaces: inetBind() and inetListen() */
+/*!
+ Public interfaces: inetBind() and inetListen()
 
+ */
 static int inetPassiveSocket(const char *service, int type, socklen_t *addrlen, int doListen, int backlog) {
     struct addrinfo hints;
     struct addrinfo *result, *rp;
