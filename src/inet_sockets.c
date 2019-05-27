@@ -6,11 +6,11 @@
 #include "../include/inet_sockets.h"
 
 /*!
- Create a socket of type (SOCK_STREAM || SOCK_DGRAM) and connect to a host on a service
- @param host The host to connect to (either format)
- @param service Service name or PORT number
- @param type (SOCK_STREAM || SOCK_DGRAM) for their respective usage of TCP or UDP
- @returns Returns -1 on failure or the file descriptor it is connected to on success.
+ * Create a socket of type (SOCK_STREAM || SOCK_DGRAM) and connect to a host on a service
+ * @param host The host to connect to (either format)
+ * @param service Service name or PORT number
+ * @param type (SOCK_STREAM || SOCK_DGRAM) for their respective usage of TCP or UDP
+ * @return Returns -1 on failure or the file descriptor it is connected to on success.
  */
 int inetConnect(const char *host, const char *service, int type) {
 
@@ -46,7 +46,6 @@ int inetConnect(const char *host, const char *service, int type) {
 
 /*!
  Public interfaces: inetBind() and inetListen()
-
  */
 static int inetPassiveSocket(const char *service, int type, socklen_t *addrlen, int doListen, int backlog) {
     struct addrinfo hints;
@@ -95,14 +94,40 @@ static int inetPassiveSocket(const char *service, int type, socklen_t *addrlen, 
     return (rp == NULL) ? -1 : sfd;
 }
 
+/*!
+ * Return a listening FD for service with a backlog. If *addrlen  !=NULL then it will store the length of the created
+ * socket to what it points to.
+ * @param service Service name or PORT number
+ * @param backlog is equal to the number of pending connections the queue will hold.
+ * @param addrlen a pointer to a socklen_t object to store the length of the returned socket to
+ * @return a file descriptor to the socket opened
+ */
 int inetListen(const char *service, int backlog, socklen_t *addrlen) {
     return inetPassiveSocket(service, SOCK_STREAM, addrlen, TRUE, backlog);
 }
 
+/*!
+ * Primarily used for UDP servers. It creates and binds a socket of type (SOCK_STREAM || SOCK_DGRAM) on the wildcard IP
+ * of the host on port service. If *addrlen  !=NULL then it will store the length of the created
+ * socket to what it points to.
+ * @param service Service name or PORT number
+ * @param type (SOCK_STREAM || SOCK_DGRAM) for their respective usage of TCP or UDP
+ * @param addrlen a pointer to a socklen_t object to store the length of the returned socket to
+ * @return a file descriptor to the socket opened
+ */
 int inetBind(const char *service, int type, socklen_t *addrlen) {
     return inetPassiveSocket(service, type, addrlen, FALSE, 0);
 }
 
+/*!
+ * Returns a null terminated string containing the human readable hostname and port into addrStr whose size is
+ * AddrStrLen. An always appropriate size is IS_ADDR_STR_LEN
+ * @param addr a pointer to a sockaddr object which holds data on the connected peer
+ * @param addrlen the lenght of the connected peer's address
+ * @param addrStr a char array to store the returned human readable address
+ * @param addrStrLen the length of the char array addrStr
+ * @return returns addrStr
+ */
 char *inetAddressStr(const struct sockaddr *addr, socklen_t addrlen, char *addrStr, int addrStrLen) {
     char host[NI_MAXHOST], service[NI_MAXSERV];
     if (getnameinfo(addr, addrlen, host, NI_MAXHOST,

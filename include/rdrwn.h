@@ -8,6 +8,8 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
+#include <stdio.h>
+
 
 ssize_t readn(int fd, void *buffer, size_t n);
 
