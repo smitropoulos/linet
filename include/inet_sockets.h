@@ -14,6 +14,11 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 
+
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 #define TRUE 1
 #define FALSE 0
 
@@ -23,9 +28,6 @@
 should pass to inetAddressStr(). Must be greater
 than (NI_MAXHOST + NI_MAXSERV + 4) */
 
-#ifdef __cplusplus
-extern "C"{
-#endif
 
 int inetConnect(const char* host, const char* service, int type);
 

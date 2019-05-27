@@ -10,9 +10,18 @@
 #include <netdb.h>
 #include <stdio.h>
 
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 
 ssize_t readn(int fd, void *buffer, size_t n);
 
 ssize_t writen(int fd, const void *buffer, size_t n);
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //LINET_RDRWN_H
