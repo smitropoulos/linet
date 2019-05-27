@@ -4,12 +4,11 @@ project(linet C)
 set(CMAKE_C_STANDARD 99)
 SET(CMAKE_CXX_FLAGS -o3)
 
+include_directories(include)
 
 add_library(linet STATIC
         src/rdrwn.c
         src/inet_sockets.c
-        include/inet_sockets.h
-        include/rdrwn.h
         )
 
 FILE(GLOB headerFiles include/*.h)
