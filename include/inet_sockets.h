@@ -33,7 +33,6 @@ int inetConnect(const char* host, const char* service, int type);
 
 static int inetPassiveSocket(const char* service, int type, socklen_t* addrlen, int doListen, int backlog);
 
-
 int inetListen(const char* service, int backlog, socklen_t* addrlen);
 
 int inetBind(const char* service, int type, socklen_t* addrlen);

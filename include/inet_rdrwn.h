@@ -1,5 +1,5 @@
-#ifndef LINET_RDRWN_H
-#define LINET_RDRWN_H
+#ifndef LINET_INET_RDRWN_H
+#define LINET_INET_RDRWN_H
 
 #include <unistd.h>
 #include <errno.h>
@@ -9,6 +9,8 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include "inet_spec_packet.h"
 
 #ifdef __cplusplus
 extern "C"{
@@ -19,9 +21,10 @@ ssize_t readn(int fd, void *buffer, size_t n);
 
 ssize_t writen(int fd, const void *buffer, size_t n);
 
+int sendWOLpacket(char *physicalAddress);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif //LINET_RDRWN_H
+#endif //LINET_INET_RDRWN_H

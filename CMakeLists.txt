@@ -7,9 +7,9 @@ SET(CMAKE_CXX_FLAGS -o3)
 include_directories(include)
 
 add_library(linet STATIC
-        src/rdrwn.c
+        src/inet_rdrwn.c
         src/inet_sockets.c
-        include/spec_packet.h src/spec_packet.c)
+        include/inet_spec_packet.h src/inet_spec_packet.c)
 
 FILE(GLOB headerFiles include/*.h)
 
