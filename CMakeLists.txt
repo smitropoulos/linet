@@ -9,7 +9,7 @@ include_directories(include)
 add_library(linet STATIC
         src/inet_rdrwn.c
         src/inet_sockets.c
-        include/inet_spec_packet.h src/inet_spec_packet.c)
+        include/inet_spec_packet.h src/inet_spec_packet.c src/inet_oper.c include/inet_oper.h)
 
 FILE(GLOB headerFiles include/*.h)
 
