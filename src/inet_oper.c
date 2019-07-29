@@ -3,7 +3,7 @@
 //
 
 #include "inet_oper.h"
-#include <inet_sockets.h>
+#include "inet_sockets.h"
 
 int sendWOLPacket(char *packet) {
 
@@ -14,6 +14,7 @@ int sendWOLPacket(char *packet) {
 
     addr.sin_family = AF_INET;
     addr.sin_port = htons(WOL_PORT);
+
     if (inet_aton(broadcast_addr, &addr.sin_addr) == 0) {
         perror("Not valid IP address given");
         return -1;
