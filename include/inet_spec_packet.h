@@ -14,7 +14,7 @@ extern "C"{
 #define MAGIC_PACKET_LENGTH 102
 
 // Create Magic Packet.  Magic packet consists of 6 bytes of 0xFF (255) and 16 times the mac address of the target
-void createMagicPacket(unsigned char *magicPacket, char *physicalAddress);
+int createMagicPacket(unsigned char *magicPacket, char *physicalAddress);
 
 #ifdef __cplusplus
 }

@@ -26,7 +26,6 @@ ssize_t readn(int fd, void *buffer, size_t n) {
             } else {
                 return -1; /* Some other error */
             }
-            break;
         }
         totRead += numRead;
         buf += numRead;
@@ -62,41 +61,19 @@ ssize_t writen(int fd, const void *buffer, size_t n) {
     return totWritten; /* Must be 'n' bytes if we get here */
 }
 
-int sendWOLpacket(char *physicalAddress) {
+int createWOLpacket(const unsigned char *mac_address) {
 
-    int broadcast = 1;
-    struct sockaddr_in udpClient;
-    struct sockaddr_in udpServer;
-    char broadcastAddress[16] = "192.168.100.255";
+    unsigned char packet[PACKET_LENGTH];
 
-    // Setup broadcast socket
-    int udpSocket = socket(AF_INET, SOCK_DGRAM, 0);
-    if (setsockopt(udpSocket, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof broadcast) == -1) {
-        perror("Failed to setup a broadcast socket.\n");
-        return -1;
+    for (int i = 0; i < 6; i++) {
+        packet[i] = 0xFF;
     }
 
-    // Set parameters
-    udpClient.sin_family = AF_INET;
-    udpClient.sin_addr.s_addr = INADDR_ANY;
-    udpClient.sin_port = 0;
-    // Bind socket
-    if (bind(udpSocket, (struct sockaddr *) &udpClient, sizeof(udpClient)) < 0) {
-        perror("Failed to bind.\n");
-        return -1;
+    for (int i = 1; i <= 16; i++) {
+        for (int j = 0; j < 6; j++) {
+            packet[i * 6 + j] = mac_address[j];
+        }
     }
 
-    // Set server end point (the broadcast addres)
-    udpServer.sin_family = AF_INET;
-    udpServer.sin_addr.s_addr = inet_addr(broadcastAddress);
-    udpServer.sin_port = htons(9);
 
-    unsigned char packet[102];
-    createMagicPacket(packet, physicalAddress);
-
-    // Send the packet
-    int rv = sendto(udpSocket, &packet, sizeof(unsigned char) * 102, 0, (struct sockaddr *) &udpServer,
-                    sizeof(udpServer));
-
-    return rv;
 }

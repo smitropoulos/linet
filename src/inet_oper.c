@@ -5,7 +5,7 @@
 #include "inet_oper.h"
 #include "inet_sockets.h"
 
-int sendWOLPacket(char *packet) {
+int sendWOLPacket(unsigned char *packet) {
 
     int sock;
     int optval = 1;
@@ -30,7 +30,7 @@ int sendWOLPacket(char *packet) {
         return -1;
     }
 
-    if (sendto(sock, packet, sizeof(packet), 0, (struct sockaddr *) &addr, sizeof(addr)) < 0) {
+    if (sendto(sock, packet, MAGIC_PACKET_LENGTH, 0, (struct sockaddr *) &addr, sizeof(addr)) < 0) {
         perror("Cannot send data!");
         return -1;
     }

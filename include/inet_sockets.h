@@ -29,7 +29,7 @@ should pass to inetAddressStr(). Must be greater
 than (NI_MAXHOST + NI_MAXSERV + 4) */
 
 
-int inetConnect(const char* host, const char* service, int type);
+int inetCreateAndConnect(const char *host, const char *service, int type, int doNotConnect);
 
 static int inetPassiveSocket(const char* service, int type, socklen_t* addrlen, int doListen, int backlog);
 

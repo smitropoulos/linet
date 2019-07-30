@@ -3,42 +3,47 @@
 //
 
 #include "inet_sockets.h"
-#include "../include/inet_sockets.h"
 
 /*!
  * Create a socket of type (SOCK_STREAM || SOCK_DGRAM) and connect to a host on a service
  * @param host The host to connect to (either format)
  * @param service Service name or PORT number
  * @param type (SOCK_STREAM || SOCK_DGRAM) for their respective usage of TCP or UDP
+ * @param doNotConnect If this is a UDP socket, you have the option to not connect to the service
  * @return Returns -1 on failure or the file descriptor it is connected to on success.
- */
-int inetConnect(const char *host, const char *service, int type) {
+  */
+int inetCreateAndConnect(const char *host, const char *service, int type, int doNotConnect) {
 
     struct addrinfo hints;
     struct addrinfo *result, *rp;
-    int sfd, s;
+    int sfd = 0, s = 0;
     memset(&hints, 0, sizeof(struct addrinfo));
     hints.ai_canonname = NULL;
     hints.ai_addr = NULL;
     hints.ai_next = NULL;
-    hints.ai_family = AF_UNSPEC; /* Allows IPv4 or IPv6 */
-    hints.ai_socktype = type;   /* SOCK_STREAM SOCK_DGRAM */
+    hints.ai_family = AF_UNSPEC; /* Allows IPv4 || IPv6 */
+    hints.ai_socktype = type;   /* SOCK_STREAM || SOCK_DGRAM */
 
     s = getaddrinfo(host, service, &hints, &result);
     if (s != 0) {
         errno = ENOSYS;
         return -1;
     }
+
     /* Walk through returned list until we find an address structure
     that can be used to successfully connect a socket */
     for (rp = result; rp != NULL; rp = rp->ai_next) {
         sfd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
         if (sfd == -1)
             continue; /* On error, try next address */
-        if (connect(sfd, rp->ai_addr, rp->ai_addrlen) != -1)
-            break; /* Success */
-        /* Connect failed: close this socket and try next address */
-        close(sfd);
+        if (!doNotConnect) {
+            if (connect(sfd, rp->ai_addr, rp->ai_addrlen) != -1)
+                break; /* Success */
+            /* Connect failed: close this socket and try next address */
+            close(sfd);
+        } else {
+            break;
+        }
     }
     freeaddrinfo(result);
     return (rp == NULL) ? -1 : sfd;
@@ -50,7 +55,7 @@ int inetConnect(const char *host, const char *service, int type) {
 static int inetPassiveSocket(const char *service, int type, socklen_t *addrlen, int doListen, int backlog) {
     struct addrinfo hints;
     struct addrinfo *result, *rp;
-    int sfd, optval, s;
+    int sfd = 0, optval, s;
     memset(&hints, 0, sizeof(struct addrinfo));
     hints.ai_canonname = NULL;
     hints.ai_addr = NULL;

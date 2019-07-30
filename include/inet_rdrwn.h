@@ -12,6 +12,8 @@
 #include <stdlib.h>
 #include "inet_spec_packet.h"
 
+#define PACKET_LENGTH 16
+
 #ifdef __cplusplus
 extern "C"{
 #endif
@@ -21,7 +23,7 @@ ssize_t readn(int fd, void *buffer, size_t n);
 
 ssize_t writen(int fd, const void *buffer, size_t n);
 
-int sendWOLpacket(char *physicalAddress);
+int createWOLpacket(const unsigned char mac_address[]);
 
 #ifdef __cplusplus
 }
