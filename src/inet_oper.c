@@ -37,3 +37,32 @@ int sendWOLPacket(unsigned char *packet) {
 
     return 0;
 }
+
+int hostResolve() {
+
+    char hostbuffer[256];
+    char *IPbuffer;
+    struct hostent *host_entry;
+    int hostname;
+
+    // To retrieve hostname
+    hostname = gethostname(hostbuffer, sizeof(hostbuffer));
+    if (hostname == -1) {
+        perror("gethostname");
+        exit(1);
+    }
+    // To retrieve host information
+    host_entry = gethostbyname(hostbuffer);
+    if (host_entry == NULL) {
+        perror("gethostbyname");
+        exit(1);
+    }
+    // To convert an Internet network
+    // address into ASCII string
+    IPbuffer = inet_ntoa(*((struct in_addr *) host_entry->h_addr_list[0]));
+
+    printf("Hostname: %s\n", hostbuffer);
+    printf("Host IP: %s\n", IPbuffer);
+
+    return 0;
+}

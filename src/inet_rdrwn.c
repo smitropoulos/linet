@@ -34,7 +34,7 @@ ssize_t readn(int fd, void *buffer, size_t n) {
 }
 
 /*!
- * Writes data to an fd
+ * Writes data to an fd in a loop (for TCP)
  * @param fd File descriptor to write data to
  * @param buffer Buffer that contains the data to be written
  * @param n Number of bytes to be written to fd
