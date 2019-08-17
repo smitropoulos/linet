@@ -31,7 +31,7 @@ than (NI_MAXHOST + NI_MAXSERV + 4) */
 
 int inetCreateAndConnect(const char *host, const char *service, int type, int doNotConnect);
 
-static int inetPassiveSocket(const char* service, int type, socklen_t* addrlen, int doListen, int backlog);
+int inetPassiveSocket(const char *service, int type, socklen_t *addrlen, int doListen, int backlog);
 
 int inetListen(const char* service, int backlog, socklen_t* addrlen);
 

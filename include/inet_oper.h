@@ -6,6 +6,7 @@
 #define LINET_INET_OPER_H
 
 #include "inet_spec_packet.h"
+#include <stdlib.h>
 #define WOL_PORT 9
 
 #ifdef __cplusplus
@@ -15,6 +16,7 @@ extern "C"{
 
 int sendWOLPacket(unsigned char *packet);
 
+int hostResolve();
 
 #ifdef __cplusplus
 }

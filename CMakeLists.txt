@@ -11,6 +11,8 @@ add_library(linet STATIC
         src/inet_oper.c
         )
 
+set_target_properties(linet PROPERTIES COMPILE_FLAGS "-Wall -Werror")
+
 target_include_directories(linet
         PUBLIC
         $<INSTALL_INTERFACE:include>

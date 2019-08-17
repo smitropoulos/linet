@@ -52,7 +52,7 @@ int inetCreateAndConnect(const char *host, const char *service, int type, int do
 /*!
  Public interfaces: inetBind() and inetListen()
  */
-static int inetPassiveSocket(const char *service, int type, socklen_t *addrlen, int doListen, int backlog) {
+int inetPassiveSocket(const char *service, int type, socklen_t *addrlen, int doListen, int backlog) {
     struct addrinfo hints;
     struct addrinfo *result, *rp;
     int sfd = 0, optval, s;
