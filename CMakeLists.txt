@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
-project(linet VERSION 1.5.3 LANGUAGES C)
+project(linet VERSION 1.6.3 LANGUAGES C)
 
 set(CMAKE_C_STANDARD 99)
 SET(CMAKE_CXX_FLAGS -o3)
