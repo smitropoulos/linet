@@ -33,7 +33,6 @@ int createMagicPacket(unsigned char *magicPacket, char *mac) {
     // 6 x 0xFF on start of magicPacket
     for (int ii = 0; ii < 6; ii++) {
         magicPacket[ii] = 255;
-        mac[ii] = mac[ii];
     }
 
     for (int iii = 1; iii <= 16; iii++) {

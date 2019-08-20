@@ -5,6 +5,11 @@
 #include "inet_oper.h"
 #include "inet_sockets.h"
 
+/*!
+ * Broadcast a magic packet to 255.255.255.255. The packet with the physical address is created elsewhere
+ * @param packet The packet to be broadcast (in general a magic WOL packet)
+ * @return Returns 0 on success, -1 on errors
+ */
 int sendWOLPacket(unsigned char *packet) {
 
     int sock;
@@ -38,6 +43,10 @@ int sendWOLPacket(unsigned char *packet) {
     return 0;
 }
 
+/*!
+ * Resolve the host name and ip address of the host and print them on stdout
+ * @return Returns 0 on success, 1 on errors
+ */
 int hostResolve() {
 
     char hostbuffer[256];
@@ -49,13 +58,13 @@ int hostResolve() {
     hostname = gethostname(hostbuffer, sizeof(hostbuffer));
     if (hostname == -1) {
         perror("gethostname");
-        exit(1);
+        return (1);
     }
     // To retrieve host information
     host_entry = gethostbyname(hostbuffer);
     if (host_entry == NULL) {
         perror("gethostbyname");
-        exit(1);
+        return (1);
     }
     // To convert an Internet network
     // address into ASCII string
