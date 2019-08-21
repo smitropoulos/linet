@@ -2,8 +2,6 @@
 // Created by Stefanos Mitropoulos on 2019-05-27.
 //
 
-#include <stdio.h>
-#include <errno.h>
 #include <stdlib.h>
 #include "inet_spec_packet.h"
 
@@ -26,6 +24,7 @@ int createMagicPacket(unsigned char *magicPacket, char *mac) {
             return -1;
         }
 
+        //Convert a string to long int with a convert base of 16 for hex
         convMac[i] = (unsigned char) strtol(tok, NULL, CONVERT_BASE);
         tok = strtok(NULL, delimiter);
     }
