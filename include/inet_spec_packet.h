@@ -10,9 +10,10 @@ extern "C"{
 #endif
 
 #include <string.h>
-
+#include <stdlib.h>
 #define MAGIC_PACKET_LENGTH 102
-
+#define MAC_ADDR_MAX 6 //bytes
+#define HEX_CONVERT_BASE 16 //
 // Create Magic Packet.  Magic packet consists of 6 bytes of 0xFF (255) and 16 times the mac address of the target
 int createMagicPacket(unsigned char *magicPacket, char *physicalAddress);
 
