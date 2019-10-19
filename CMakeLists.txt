@@ -12,6 +12,7 @@ add_library(linet STATIC
         )
 
 set_target_properties(linet PROPERTIES COMPILE_FLAGS "-Wall -Werror")
+set_target_properties(linet PROPERTIES PUBLIC_HEADER "include/inet_oper.h;include/inet_rdrwn.h;include/inet_sockets.h;include/inet_spec_packet.h")
 
 target_include_directories(linet
         PUBLIC
@@ -28,6 +29,7 @@ install(TARGETS linet
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
         )
 
 # This makes the project importable from the install directory
