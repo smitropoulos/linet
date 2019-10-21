@@ -1,0 +1,62 @@
+.TH "/home/smitropoulos/CLionProjects/linet/src/inet_rdrwn.c" 3 "Tue Aug 20 2019" "Version 1.6" "Inet Library" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+/home/smitropoulos/CLionProjects/linet/src/inet_rdrwn.c
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'inet_rdrwn\&.h'\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "ssize_t \fBreadn\fP (int fd, void *buffer, size_t n)"
+.br
+.ti -1c
+.RI "ssize_t \fBwriten\fP (int fd, const void *buffer, size_t n)"
+.br
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "ssize_t readn (int fd, void * buffer, size_t n)"
+Read data off of a socket 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIfd\fP File descriptor to read data from 
+.br
+\fIbuffer\fP Where to put the data read 
+.br
+\fIn\fP What size will be the data to be read 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+returns the number of bytes read or -1 for error 
+.RE
+.PP
+
+.SS "ssize_t writen (int fd, const void * buffer, size_t n)"
+Writes data to an fd in a loop (for TCP) 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIfd\fP File descriptor to write data to 
+.br
+\fIbuffer\fP Buffer that contains the data to be written 
+.br
+\fIn\fP Number of bytes to be written to fd 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+returns the number of bytes written or -1 for error 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Inet Library from the source code\&.

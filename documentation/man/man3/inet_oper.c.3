@@ -1,0 +1,51 @@
+.TH "/home/smitropoulos/CLionProjects/linet/src/inet_oper.c" 3 "Tue Aug 20 2019" "Version 1.6" "Inet Library" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+/home/smitropoulos/CLionProjects/linet/src/inet_oper.c
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'inet_oper\&.h'\fP
+.br
+\fC#include 'inet_sockets\&.h'\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "int \fBsendWOLPacket\fP (unsigned char *packet)"
+.br
+.ti -1c
+.RI "int \fBhostResolve\fP ()"
+.br
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "int hostResolve ()"
+Resolve the host name and ip address of the host and print them on stdout 
+.PP
+\fBReturns:\fP
+.RS 4
+Returns 0 on success, 1 on errors 
+.RE
+.PP
+
+.SS "int sendWOLPacket (unsigned char * packet)"
+Broadcast a magic packet to 255\&.255\&.255\&.255\&. The packet with the physical address is created elsewhere 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpacket\fP The packet to be broadcast (in general a magic WOL packet) 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Returns 0 on success, -1 on errors 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Inet Library from the source code\&.

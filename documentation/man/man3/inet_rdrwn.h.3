@@ -1,0 +1,96 @@
+.TH "/home/smitropoulos/CLionProjects/linet/include/inet_rdrwn.h" 3 "Tue Aug 20 2019" "Version 1.6" "Inet Library" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+/home/smitropoulos/CLionProjects/linet/include/inet_rdrwn.h
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <sys/socket\&.h>\fP
+.br
+\fC#include <netinet/in\&.h>\fP
+.br
+\fC#include <arpa/inet\&.h>\fP
+.br
+\fC#include <netdb\&.h>\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include 'inet_spec_packet\&.h'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBPACKET_LENGTH\fP   16"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "ssize_t \fBreadn\fP (int fd, void *buffer, size_t n)"
+.br
+.ti -1c
+.RI "ssize_t \fBwriten\fP (int fd, const void *buffer, size_t n)"
+.br
+.ti -1c
+.RI "int \fBcreateWOLpacket\fP (const unsigned char mac_address[])"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define PACKET_LENGTH   16"
+
+.SH "Function Documentation"
+.PP 
+.SS "int createWOLpacket (const unsigned char mac_address[])"
+
+.SS "ssize_t readn (int fd, void * buffer, size_t n)"
+Read data off of a socket 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIfd\fP File descriptor to read data from 
+.br
+\fIbuffer\fP Where to put the data read 
+.br
+\fIn\fP What size will be the data to be read 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+returns the number of bytes read or -1 for error 
+.RE
+.PP
+
+.SS "ssize_t writen (int fd, const void * buffer, size_t n)"
+Writes data to an fd in a loop (for TCP) 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIfd\fP File descriptor to write data to 
+.br
+\fIbuffer\fP Buffer that contains the data to be written 
+.br
+\fIn\fP Number of bytes to be written to fd 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+returns the number of bytes written or -1 for error 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Inet Library from the source code\&.

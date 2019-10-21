@@ -1,0 +1,113 @@
+.TH "/home/smitropoulos/CLionProjects/linet/src/inet_sockets.c" 3 "Tue Aug 20 2019" "Version 1.6" "Inet Library" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+/home/smitropoulos/CLionProjects/linet/src/inet_sockets.c
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'inet_sockets\&.h'\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "int \fBinetCreateAndConnect\fP (const char *host, const char *service, int type, int doNotConnect)"
+.br
+.ti -1c
+.RI "int \fBinetPassiveSocket\fP (const char *service, int type, socklen_t *addrlen, int doListen, int backlog)"
+.br
+.ti -1c
+.RI "int \fBinetListen\fP (const char *service, int backlog, socklen_t *addrlen)"
+.br
+.ti -1c
+.RI "int \fBinetBind\fP (const char *service, int type, socklen_t *addrlen)"
+.br
+.ti -1c
+.RI "char * \fBinetAddressStr\fP (const struct sockaddr *addr, socklen_t addrlen, char *addrStr, int addrStrLen)"
+.br
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "char* inetAddressStr (const struct sockaddr * addr, socklen_t addrlen, char * addrStr, int addrStrLen)"
+Returns a null terminated string containing the human readable hostname and port into addrStr whose size is AddrStrLen\&. An always appropriate size is IS_ADDR_STR_LEN 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIaddr\fP a pointer to a sockaddr object which holds data on the connected peer 
+.br
+\fIaddrlen\fP the lenght of the connected peer's address 
+.br
+\fIaddrStr\fP a char array to store the returned human readable address 
+.br
+\fIaddrStrLen\fP the length of the char array addrStr 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+returns addrStr 
+.RE
+.PP
+
+.SS "int inetBind (const char * service, int type, socklen_t * addrlen)"
+Primarily used for UDP servers\&. It creates and binds a socket of type (SOCK_STREAM || SOCK_DGRAM) on the wildcard IP of the host on port service\&. If *addrlen !=NULL then it will store the length of the created socket to what it points to\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIservice\fP Service name or PORT number 
+.br
+\fItype\fP (SOCK_STREAM || SOCK_DGRAM) for their respective usage of TCP or UDP 
+.br
+\fIaddrlen\fP a pointer to a socklen_t object to store the length of the returned socket to 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+a file descriptor to the socket opened 
+.RE
+.PP
+
+.SS "int inetCreateAndConnect (const char * host, const char * service, int type, int doNotConnect)"
+Create a socket of type (SOCK_STREAM || SOCK_DGRAM) and connect to a host on a service 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhost\fP The host to connect to (either format) 
+.br
+\fIservice\fP Service name or PORT number 
+.br
+\fItype\fP (SOCK_STREAM || SOCK_DGRAM) for their respective usage of TCP or UDP 
+.br
+\fIdoNotConnect\fP If this is a UDP socket, you have the option to not connect to the service 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Returns -1 on failure or the file descriptor it is connected to on success\&. 
+.RE
+.PP
+
+.SS "int inetListen (const char * service, int backlog, socklen_t * addrlen)"
+Return a listening FD for service with a backlog\&. If *addrlen !=NULL then it will store the length of the created socket to what it points to\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIservice\fP Service name or PORT number 
+.br
+\fIbacklog\fP is equal to the number of pending connections the queue will hold\&. 
+.br
+\fIaddrlen\fP a pointer to a socklen_t object to store the length of the returned socket to 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+a file descriptor to the socket opened 
+.RE
+.PP
+
+.SS "int inetPassiveSocket (const char * service, int type, socklen_t * addrlen, int doListen, int backlog)"
+Public interfaces: \fBinetBind()\fP and \fBinetListen()\fP 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Inet Library from the source code\&.
