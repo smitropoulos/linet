@@ -1,1 +1,1 @@
-set(linet_VER 2.4.7)
+set(linet_VER 1.6.0)

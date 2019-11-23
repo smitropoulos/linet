@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.14)
-project(linet VERSION 1.6.0 LANGUAGES C)
+project(linet LANGUAGES C)
 
-set(CMAKE_C_STANDARD 99)
-SET(CMAKE_CXX_FLAGS -o3)
+# Add _debug when building a debug configuration of the library
+set(CMAKE_DEBUG_POSTFIX _debug)
 
 add_library(linet STATIC
             src/inet_rdrwn.c
@@ -22,6 +22,7 @@ target_include_directories(linet
                            ${CMAKE_CURRENT_SOURCE_DIR}/src
                            )
 
+# Add git version of the project inside the src code
 find_package(Git REQUIRED)
 execute_process(
         COMMAND ${GIT_EXECUTABLE} rev-list -1 HEAD -- projectVersionDetails.cmake
