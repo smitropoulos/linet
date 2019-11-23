@@ -5,22 +5,48 @@ set(CMAKE_C_STANDARD 99)
 SET(CMAKE_CXX_FLAGS -o3)
 
 add_library(linet STATIC
-        src/inet_rdrwn.c
-        src/inet_sockets.c
-        src/inet_spec_packet.c
-        src/inet_oper.c
-        )
+            src/inet_rdrwn.c
+            src/inet_sockets.c
+            src/inet_spec_packet.c
+            src/inet_oper.c
+            )
 
 set_target_properties(linet PROPERTIES COMPILE_FLAGS "-Wall -Werror")
 set_target_properties(linet PROPERTIES PUBLIC_HEADER "include/inet_oper.h;include/inet_rdrwn.h;include/inet_sockets.h;include/inet_spec_packet.h")
 
 target_include_directories(linet
-        PUBLIC
-        $<INSTALL_INTERFACE:include>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src
-        )
+                           PUBLIC
+                           $<INSTALL_INTERFACE:include>
+                           $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+                           PRIVATE
+                           ${CMAKE_CURRENT_SOURCE_DIR}/src
+                           )
+
+find_package(Git REQUIRED)
+execute_process(
+        COMMAND ${GIT_EXECUTABLE} rev-list -1 HEAD -- projectVersionDetails.cmake
+        RESULT_VARIABLE result
+        OUTPUT_VARIABLE lastChangeHash
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+if (result)
+    message(FATAL_ERROR "Failed to get hash of last change: ${result}")
+endif ()
+
+execute_process(
+        COMMAND ${GIT_EXECUTABLE} rev-list ${lastChangeHash}..HEAD
+        RESULT_VARIABLE result
+        OUTPUT_VARIABLE hashList
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+if (result)
+    message(FATAL_ERROR "Failed to get list of git hashes: ${result}")
+endif ()
+string(REGEX REPLACE "[\n\r]+" ";" hashList "${hashList}")
+list(LENGTH hashList FooBar_COMMITS_SINCE_VERSION_CHANGE)
+
+configure_file(linet_version.c.in src/linetbar_version.c @ONLY)
 
 # 'make install' to the correct locations (provided by GNUInstallDirs).
 include(GNUInstallDirs)
@@ -42,8 +68,8 @@ install(EXPORT linetConfig
 
 # This makes the project importable from the build directory
 export(TARGETS linet
-        FILE linetConfig.cmake
-        )
+       FILE linetConfig.cmake
+       )
 
 set(CPACK_PACKAGE_VERSION ${VERSION})
 set(CPACK_GENERATOR "RPM")

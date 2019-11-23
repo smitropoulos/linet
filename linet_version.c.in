@@ -1,0 +1,4 @@
+ unsigned getFooBarCommitsSinceVersionChange()
+ {
+ return @FooBar_COMMITS_SINCE_VERSION_CHANGE@;
+ }
