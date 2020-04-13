@@ -23,31 +23,44 @@ target_include_directories(linet
                            )
 
 # Add git version of the project inside the src code
-find_package(Git REQUIRED)
-execute_process(
-        COMMAND ${GIT_EXECUTABLE} rev-list -1 HEAD -- projectVersionDetails.cmake
-        RESULT_VARIABLE result
-        OUTPUT_VARIABLE lastChangeHash
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-)
+find_package(Git QUIET)
 
-if (result)
-    message(FATAL_ERROR "Failed to get hash of last change: ${result}")
+if (${Git_FOUND})
+
+    #Check if this is a git repo
+    execute_process(
+            COMMAND ${GIT_EXECUTABLE} rev-parse --is-inside-work-tree
+            OUTPUT_VARIABLE result
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    if (${result})
+
+        execute_process(
+                COMMAND ${GIT_EXECUTABLE} rev-list -1 HEAD -- projectVersionDetails.cmake
+                RESULT_VARIABLE result
+                OUTPUT_VARIABLE lastChangeHash
+                OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+
+        if (result)
+            message(FATAL_ERROR "Failed to get hash of last change: ${result}")
+        endif ()
+
+        execute_process(
+                COMMAND ${GIT_EXECUTABLE} rev-list ${lastChangeHash}..HEAD
+                RESULT_VARIABLE result
+                OUTPUT_VARIABLE hashList
+                OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+        if (result)
+            message(FATAL_ERROR "Failed to get list of git hashes: ${result}")
+        endif ()
+        string(REGEX REPLACE "[\n\r]+" ";" hashList "${hashList}")
+        list(LENGTH hashList FooBar_COMMITS_SINCE_VERSION_CHANGE)
+
+        configure_file(linet_version.c.in src/linetbar_version.c @ONLY)
+    endif ()
 endif ()
-
-execute_process(
-        COMMAND ${GIT_EXECUTABLE} rev-list ${lastChangeHash}..HEAD
-        RESULT_VARIABLE result
-        OUTPUT_VARIABLE hashList
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-if (result)
-    message(FATAL_ERROR "Failed to get list of git hashes: ${result}")
-endif ()
-string(REGEX REPLACE "[\n\r]+" ";" hashList "${hashList}")
-list(LENGTH hashList FooBar_COMMITS_SINCE_VERSION_CHANGE)
-
-configure_file(linet_version.c.in src/linetbar_version.c @ONLY)
 
 # 'make install' to the correct locations (provided by GNUInstallDirs).
 include(GNUInstallDirs)
