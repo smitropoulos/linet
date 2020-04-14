@@ -75,10 +75,10 @@ install(TARGETS linet
 # This makes the project importable from the install directory
 # Put config file in per-project dir (name MUST match), can also
 # just go into 'cmake'.
-install(EXPORT linetConfig
-        NAMESPACE linet::
-        DESTINATION share/linet/cmake
-        )
+#install(EXPORT linetConfig
+#        NAMESPACE linet::
+#        DESTINATION share/linet/cmake
+#        )
 
 # This makes the project importable from the build directory
 export(TARGETS linet
