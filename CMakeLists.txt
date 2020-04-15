@@ -63,14 +63,14 @@ if (${Git_FOUND})
 endif ()
 
 # 'make install' to the correct locations (provided by GNUInstallDirs).
-include(GNUInstallDirs)
-install(TARGETS linet
-        EXPORT linetConfig
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-        )
+#include(GNUInstallDirs)
+#install(TARGETS linet
+#        EXPORT linetConfig
+#        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+#        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+#        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+#        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+#        )
 
 # This makes the project importable from the install directory
 # Put config file in per-project dir (name MUST match), can also
@@ -81,9 +81,9 @@ install(TARGETS linet
 #        )
 
 # This makes the project importable from the build directory
-export(TARGETS linet
-       FILE linetConfig.cmake
-       )
+#export(TARGETS linet
+#       FILE linetConfig.cmake
+#       )
 
 set(CPACK_PACKAGE_VERSION ${VERSION})
 set(CPACK_GENERATOR "RPM")
