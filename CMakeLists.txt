@@ -1,6 +1,16 @@
 cmake_minimum_required(VERSION 3.14)
 project(linet LANGUAGES C)
 
+# Enable generation of compile_commands.json
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# Create a symlink for clangd to find it in the project root
+if(NOT EXISTS "${CMAKE_SOURCE_DIR}/compile_commands.json")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink
+                    "${CMAKE_BINARY_DIR}/compile_commands.json"
+                    "${CMAKE_SOURCE_DIR}/compile_commands.json")
+endif()
+
 # Add _debug when building a debug configuration of the library
 set(CMAKE_DEBUG_POSTFIX _debug)
 
@@ -63,27 +73,27 @@ if (${Git_FOUND})
 endif ()
 
 # 'make install' to the correct locations (provided by GNUInstallDirs).
-#include(GNUInstallDirs)
-#install(TARGETS linet
-#        EXPORT linetConfig
-#        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-#        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-#        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-#        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-#        )
+include(GNUInstallDirs)
+install(TARGETS linet
+        EXPORT linetConfig
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+        )
 
 # This makes the project importable from the install directory
 # Put config file in per-project dir (name MUST match), can also
 # just go into 'cmake'.
-#install(EXPORT linetConfig
-#        NAMESPACE linet::
-#        DESTINATION share/linet/cmake
-#        )
+install(EXPORT linetConfig
+        NAMESPACE linet::
+        DESTINATION share/linet/cmake
+        )
 
 # This makes the project importable from the build directory
-#export(TARGETS linet
-#       FILE linetConfig.cmake
-#       )
+export(TARGETS linet
+       FILE linetConfig.cmake
+       )
 
 set(CPACK_PACKAGE_VERSION ${VERSION})
 set(CPACK_GENERATOR "RPM")
