@@ -10,11 +10,10 @@
 #define WOL_PORT 9
 
 #ifdef __cplusplus
-extern "C"{
+extern "C" {
 #endif
 
-
-int sendWOLPacket(unsigned char *packet);
+int sendWOLPacket(unsigned char const *packet);
 
 int hostResolve();
 
@@ -22,4 +21,4 @@ int hostResolve();
 }
 #endif
 
-#endif //LINET_INET_OPER_H
+#endif // LINET_INET_OPER_H

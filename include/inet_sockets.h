@@ -5,18 +5,17 @@
 #ifndef LINET_INET_SOCKETS_H
 #define LINET_INET_SOCKETS_H
 
-#include <unistd.h>
-#include <errno.h>
-#include <string.h>
-#include <stdio.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
 #include <arpa/inet.h>
+#include <errno.h>
 #include <netdb.h>
-
+#include <netinet/in.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <unistd.h>
 
 #ifdef __cplusplus
-extern "C"{
+extern "C" {
 #endif
 
 #define TRUE 1
@@ -28,19 +27,18 @@ extern "C"{
 should pass to inetAddressStr(). Must be greater
 than (NI_MAXHOST + NI_MAXSERV + 4) */
 
-
 int inetCreateAndConnect(const char *host, const char *service, int type, int doNotConnect);
 
 int inetPassiveSocket(const char *service, int type, socklen_t *addrlen, int doListen, int backlog);
 
-int inetListen(const char* service, int backlog, socklen_t* addrlen);
+int inetListen(const char *service, int backlog, socklen_t *addrlen);
 
-int inetBind(const char* service, int type, socklen_t* addrlen);
+int inetBind(const char *service, int type, socklen_t *addrlen);
 
-char* inetAddressStr(const struct sockaddr* addr, socklen_t addrlen, char* addrStr, int addrStrLen);
+char *inetAddressStr(const struct sockaddr *addr, socklen_t addrlen, char *addrStr, int addrStrLen);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif //LINET_INET_SOCKETS_H
+#endif // LINET_INET_SOCKETS_H

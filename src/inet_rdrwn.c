@@ -1,5 +1,5 @@
 #include "inet_rdrwn.h"
-
+#include <errno.h>
 
 /*!
  * Read data off of a socket
@@ -10,22 +10,22 @@
  */
 ssize_t readn(int fd, void *buffer, size_t n) {
 
-    ssize_t numRead; /* # of bytes fetched by last read() */
-    size_t totRead; /* Total # of bytes read so far */
-    char *buf;
+    ssize_t numRead = 0; /* # of bytes fetched by last read() */
+    size_t totRead = 0;  /* Total # of bytes read so far */
+    char *buf = NULL;
     buf = buffer; /* No pointer arithmetic on "void *" */
     for (totRead = 0; totRead < n;) {
         numRead = read(fd, buf, n - totRead);
-        if (numRead == 0) /* EOF */
+        if (numRead == 0)   /* EOF */
             return totRead; /* May be 0 if this is first read() */
         if (numRead == -1) {
             if (errno == EINTR) {
                 continue; /* Interrupted --> restart read() */
-            } else if (errno == EWOULDBLOCK || errno == EAGAIN) {
-                break;  /* Would block --> exit the loop */
-            } else {
-                return -1; /* Some other error */
             }
+            if (errno == EWOULDBLOCK || errno == EAGAIN) {
+                break; /* Would block --> exit the loop */
+            }
+            return -1; /* Some other error */
         }
         totRead += numRead;
         buf += numRead;
@@ -41,19 +41,20 @@ ssize_t readn(int fd, void *buffer, size_t n) {
  * @return returns the number of bytes written or -1 for error
  */
 ssize_t writen(int fd, const void *buffer, size_t n) {
-    ssize_t numWritten; /* # of bytes written by last write() */
-    size_t totWritten; /* Total # of bytes written so far */
-    const char *buf;
+    ssize_t numWritten = 0; /* # of bytes written by last write() */
+    size_t totWritten = 0;  /* Total # of bytes written so far */
+    const char *buf = NULL;
     buf = buffer; /* No pointer arithmetic on "void *" */
     for (totWritten = 0; totWritten < n;) {
         numWritten = write(fd, buf, n - totWritten);
         if (numWritten <= 0) {
             if (numWritten == -1 && errno == EINTR) {
                 continue; /* Interrupted --> restart write() */
-            } else if (errno == EWOULDBLOCK || errno == EAGAIN) {
-                continue;  /* Would block --> try again */
-            } else
-                return -1; /* Some other error */
+            }
+            if (errno == EWOULDBLOCK || errno == EAGAIN) {
+                continue; /* Would block --> try again */
+            }
+            return -1; /* Some other error */
         }
         totWritten += numWritten;
         buf += numWritten;

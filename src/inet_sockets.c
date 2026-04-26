@@ -3,6 +3,9 @@
 //
 
 #include "inet_sockets.h"
+#include <errno.h>
+#include <stdio.h>
+#include <string.h>
 
 /*!
  * Create a socket of type (SOCK_STREAM || SOCK_DGRAM) and connect to a host on a service
@@ -11,18 +14,20 @@
  * @param type (SOCK_STREAM || SOCK_DGRAM) for their respective usage of TCP or UDP
  * @param doNotConnect If this is a UDP socket, you have the option to not connect to the service
  * @return Returns -1 on failure or the file descriptor it is connected to on success.
-  */
+ */
 int inetCreateAndConnect(const char *host, const char *service, int type, int doNotConnect) {
 
     struct addrinfo hints;
-    struct addrinfo *result, *rp;
-    int sfd = 0, s = 0;
+    struct addrinfo *result = NULL;
+    struct addrinfo *rp = NULL;
+    int sfd = 0;
+    int s = 0;
     memset(&hints, 0, sizeof(struct addrinfo));
     hints.ai_canonname = NULL;
     hints.ai_addr = NULL;
     hints.ai_next = NULL;
     hints.ai_family = AF_UNSPEC; /* Allows IPv4 || IPv6 */
-    hints.ai_socktype = type;   /* SOCK_STREAM || SOCK_DGRAM */
+    hints.ai_socktype = type;    /* SOCK_STREAM || SOCK_DGRAM */
 
     s = getaddrinfo(host, service, &hints, &result);
     if (s != 0) {
@@ -34,11 +39,13 @@ int inetCreateAndConnect(const char *host, const char *service, int type, int do
     that can be used to successfully connect a socket */
     for (rp = result; rp != NULL; rp = rp->ai_next) {
         sfd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
-        if (sfd == -1)
+        if (sfd == -1) {
             continue; /* On error, try next address */
+        }
         if (!doNotConnect) {
-            if (connect(sfd, rp->ai_addr, rp->ai_addrlen) != -1)
+            if (connect(sfd, rp->ai_addr, rp->ai_addrlen) != -1) {
                 break; /* Success */
+            }
             /* Connect failed: close this socket and try next address */
             close(sfd);
         } else {
@@ -52,37 +59,43 @@ int inetCreateAndConnect(const char *host, const char *service, int type, int do
 /*!
  Public interfaces: inetBind() and inetListen()
  */
-int inetPassiveSocket(const char *service, int type, socklen_t *addrlen, int doListen, int backlog) {
+int inetPassiveSocket(const char *service, int type, socklen_t *addrlen, int doListen,
+                      int backlog) {
     struct addrinfo hints;
-    struct addrinfo *result, *rp;
-    int sfd = 0, optval, s;
+    struct addrinfo *result = NULL;
+    struct addrinfo *rp = NULL;
+    int sfd = 0;
+    int optval = 0;
+    int s = 0;
     memset(&hints, 0, sizeof(struct addrinfo));
     hints.ai_canonname = NULL;
     hints.ai_addr = NULL;
     hints.ai_next = NULL;
-    hints.ai_socktype = type;  /* SOCK_STREAM SOCK_DGRAM */
+    hints.ai_socktype = type;    /* SOCK_STREAM SOCK_DGRAM */
     hints.ai_family = AF_UNSPEC; /* Allows IPv4 or IPv6 */
     hints.ai_flags = AI_PASSIVE; /* Use wildcard IP address */
     s = getaddrinfo(NULL, service, &hints, &result);
-    if (s != 0)
+    if (s != 0) {
         return -1;
+    }
     /* Walk through returned list until we find an address structure
     that can be used to successfully create and bind a socket */
     optval = 1;
     for (rp = result; rp != NULL; rp = rp->ai_next) {
         sfd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
-        if (sfd == -1)
+        if (sfd == -1) {
             continue; /* On error, try next address */
+        }
         if (doListen) {
-            if (setsockopt(sfd, SOL_SOCKET, SO_REUSEADDR, &optval,
-                           sizeof(optval)) == -1) {
+            if (setsockopt(sfd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval)) == -1) {
                 close(sfd);
                 freeaddrinfo(result);
                 return -1;
             }
         }
-        if (bind(sfd, rp->ai_addr, rp->ai_addrlen) == 0)
+        if (bind(sfd, rp->ai_addr, rp->ai_addrlen) == 0) {
             break; /* Success */
+        }
         /* bind() failed: close this socket and try next address */
         close(sfd);
     }
@@ -92,16 +105,17 @@ int inetPassiveSocket(const char *service, int type, socklen_t *addrlen, int doL
             return -1;
         }
     }
-    if (rp != NULL && addrlen != NULL)
+    if (rp != NULL && addrlen != NULL) {
         *addrlen = rp->ai_addrlen; /* Return address structure size */
+    }
 
     freeaddrinfo(result);
     return (rp == NULL) ? -1 : sfd;
 }
 
 /*!
- * Return a listening FD for service with a backlog. If *addrlen  !=NULL then it will store the length of the created
- * socket to what it points to.
+ * Return a listening FD for service with a backlog. If *addrlen  !=NULL then it will store the
+ * length of the created socket to what it points to.
  * @param service Service name or PORT number
  * @param backlog is equal to the number of pending connections the queue will hold.
  * @param addrlen a pointer to a socklen_t object to store the length of the returned socket to
@@ -112,9 +126,9 @@ int inetListen(const char *service, int backlog, socklen_t *addrlen) {
 }
 
 /*!
- * Primarily used for UDP servers. It creates and binds a socket of type (SOCK_STREAM || SOCK_DGRAM) on the wildcard IP
- * of the host on port service. If *addrlen  !=NULL then it will store the length of the created
- * socket to what it points to.
+ * Primarily used for UDP servers. It creates and binds a socket of type (SOCK_STREAM || SOCK_DGRAM)
+ * on the wildcard IP of the host on port service. If *addrlen  !=NULL then it will store the length
+ * of the created socket to what it points to.
  * @param service Service name or PORT number
  * @param type (SOCK_STREAM || SOCK_DGRAM) for their respective usage of TCP or UDP
  * @param addrlen a pointer to a socklen_t object to store the length of the returned socket to
@@ -125,21 +139,23 @@ int inetBind(const char *service, int type, socklen_t *addrlen) {
 }
 
 /*!
- * Returns a null terminated string containing the human readable hostname and port into addrStr whose size is
- * AddrStrLen. An always appropriate size is IS_ADDR_STR_LEN
+ * Returns a null terminated string containing the human readable hostname and port into addrStr
+ * whose size is AddrStrLen. An always appropriate size is IS_ADDR_STR_LEN
  * @param addr a pointer to a sockaddr object which holds data on the connected peer
- * @param addrlen the lenght of the connected peer's address
+ * @param addrlen the length of the connected peer's address
  * @param addrStr a char array to store the returned human readable address
  * @param addrStrLen the length of the char array addrStr
  * @return returns addrStr
  */
-char *inetAddressStr(const struct sockaddr *addr, socklen_t addrlen, char *addrStr, int addrStrLen) {
-    char host[NI_MAXHOST], service[NI_MAXSERV];
-    if (getnameinfo(addr, addrlen, host, NI_MAXHOST,
-                    service, NI_MAXSERV, NI_NUMERICSERV) == 0)
+char *inetAddressStr(const struct sockaddr *addr, socklen_t addrlen, char *addrStr,
+                     int addrStrLen) {
+    char host[NI_MAXHOST];
+    char service[NI_MAXSERV];
+    if (getnameinfo(addr, addrlen, host, NI_MAXHOST, service, NI_MAXSERV, NI_NUMERICSERV) == 0) {
         snprintf(addrStr, addrStrLen, "(%s, %s)", host, service);
-    else
+    } else {
         snprintf(addrStr, addrStrLen, "(?UNKNOWN?)");
+    }
     addrStr[addrStrLen - 1] = '\0'; /* Ensure result is null-terminated */
     return addrStr;
 }

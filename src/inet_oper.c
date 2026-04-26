@@ -4,15 +4,18 @@
 
 #include "inet_oper.h"
 #include "inet_sockets.h"
+#include "inet_spec_packet.h"
+#include <stdio.h>
 
 /*!
- * Broadcast a magic packet to 255.255.255.255. The packet with the physical address is created elsewhere
+ * Broadcast a magic packet to 255.255.255.255. The packet with the physical address is created
+ * elsewhere
  * @param packet The packet to be broadcast (in general a magic WOL packet)
  * @return Returns 0 on success, -1 on errors
  */
-int sendWOLPacket(unsigned char *packet) {
+int sendWOLPacket(unsigned const char *packet) {
 
-    int sock;
+    int sock = 0;
     int optval = 1;
     struct sockaddr_in addr;
     const char broadcast_addr[] = "255.255.255.255";
@@ -30,12 +33,12 @@ int sendWOLPacket(unsigned char *packet) {
         return -1;
     }
 
-    if (setsockopt(sock, SOL_SOCKET, SO_BROADCAST, (char *) &optval, sizeof(optval)) < 0) {
+    if (setsockopt(sock, SOL_SOCKET, SO_BROADCAST, (char *)&optval, sizeof(optval)) < 0) {
         perror("Problem in setting socket options!");
         return -1;
     }
 
-    if (sendto(sock, packet, MAGIC_PACKET_LENGTH, 0, (struct sockaddr *) &addr, sizeof(addr)) < 0) {
+    if (sendto(sock, packet, MAGIC_PACKET_LENGTH, 0, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
         perror("Cannot send data!");
         return -1;
     }
@@ -68,7 +71,7 @@ int hostResolve() {
     }
     // To convert an Internet network
     // address into ASCII string
-    IPbuffer = inet_ntoa(*((struct in_addr *) host_entry->h_addr_list[0]));
+    IPbuffer = inet_ntoa(*((struct in_addr *)host_entry->h_addr_list[0]));
 
     printf("Hostname: %s\n", hostbuffer);
     printf("Host IP: %s\n", IPbuffer);
